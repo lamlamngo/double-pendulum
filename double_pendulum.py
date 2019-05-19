@@ -10,6 +10,9 @@ def main():
     theta = phi = 0.5
     L = 1.0
 
+    try:
+        
+
 def print_usage():
     """Prints usage instructions to stderr and exits."""
 
@@ -30,6 +33,10 @@ def print_usage():
     output += "sets the initial angular velocity of each ball\n"
     output += "    -L, --rodlen=LEN      "
     output += "sets the rod length for each ball\n"
+    output += "    -verlet     "
+    output += "using verlet method\n"
+    output += "     -rk4        "
+    output += "using fourth order runge-kutta\n"
     sys.stderr.write(output)
     sys.exit(0)
 

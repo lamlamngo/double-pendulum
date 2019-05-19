@@ -1,7 +1,7 @@
 import math, numpy
 
 class DoublePendulum:
-    def __init__(self, g, m, theta, phi, L):
+    def __init__(self, g, m, theta, phi, L, w_1, w_2):
         """
         g - The gravitational acceleration
         m - the mass of two balls
@@ -16,8 +16,8 @@ class DoublePendulum:
         self.phi = phi
         self.L = L
 
-        self.w_1 = 0 # initial angular velocity ball 1
-        self.w_2 = 0 # intial angular velocity ball 2
+        self.w_1 = w_1 # initial angular velocity ball 1
+        self.w_2 = w_2 # intial angular velocity ball 2
 
         self.nat_w = self.g/self.L
 
