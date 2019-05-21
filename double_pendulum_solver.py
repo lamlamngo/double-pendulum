@@ -29,16 +29,16 @@ class DoublePendulum:
         w_2 - angular velocity of second ball
         """
 
-        g_numerator_1 = 2.0 * ((self.nat_w) ) * ( math.sin(theta) * math.cos(theta - phi) - math.sin(phi) )
-        g_numerator_2 = ((math.cos(theta - phi) * (w_2**2.0)) + 2.0 * (w_1**2)) * math.sin(theta - phi)
+        g_numerator_1 = 2 * ((self.nat_w) ) * ( math.sin(theta) * math.cos(theta - phi) - math.sin(phi) )
+        g_numerator_2 = ((math.cos(theta - phi) * (w_2**2)) + 2 * (w_1**2)) * math.sin(theta - phi)
         g_numerator = g_numerator_1 + g_numerator_2
         g_denominator = 1 + (math.sin(theta -phi))**2
         g = g_numerator / g_denominator 
 
-        f_numerator_1 = (self.nat_w) * ( math.sin(phi) * math.cos(theta - phi) - 2.0 * math.sin(theta))
+        f_numerator_1 = (self.nat_w) * ( math.sin(phi) * math.cos(theta - phi) - 2 * math.sin(theta))
         f_numerator_2 = ((w_2 ** 2) + (w_1 ** 2) * math.cos(theta - phi)) * math.sin(theta - phi)
         f_numerator = f_numerator_1 - f_numerator_2
-        f_denominator = 1 + (math.sin(theta - phi)) ** 2.0
+        f_denominator = 1 + (math.sin(theta - phi)) ** 2
         f = f_numerator / f_denominator
 
         return numpy.array([w_1, f, w_2, g])
