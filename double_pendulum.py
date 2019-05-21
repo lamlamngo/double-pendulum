@@ -5,7 +5,6 @@ import numpy as np
 import matplotlib.pyplot as plt 
 import matplotlib.animation as animation
 import double_pendulum_solver as dp
-import test_solver as ts
 import math
 
 def main():
@@ -24,7 +23,7 @@ def main():
     w_1 = np.radians(0.0)
     w_2 = np.radians(0.0)
 
-    inputs = np.array([G, M, theta, phi, L, w_1, w_2])
+    inputs = np.array([G, M, theta, phi, L, w_1, w_2, dt])
     double_pendulum_system = dp.DoublePendulum(*inputs)
 
     thetas = []

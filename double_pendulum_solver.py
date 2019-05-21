@@ -1,7 +1,7 @@
 import math, numpy
 
 class DoublePendulum:
-    def __init__(self, g, m, theta, phi, L, w_1, w_2):
+    def __init__(self, g, m, theta, phi, L, w_1, w_2, dt=0.001):
         """
         g - The gravitational acceleration
         m - the mass of two balls
@@ -30,7 +30,7 @@ class DoublePendulum:
         #Initial value for Psi((n-1)*dt)
         theta_minus1 = self.theta - w_1*dt
         phi_minus1 = self.theta - w_2*dt
-        self.psi_minus1 = numpy.([theta_minus1, phi_minus1])
+        self.psi_minus1 = numpy.array([theta_minus1, phi_minus1])
 
     def compute_right_hand_size(self, theta, w_1, phi, w_2):
         """
@@ -54,7 +54,7 @@ class DoublePendulum:
 
         return numpy.array([w_1, f, w_2, g])
    
-  def accelerations(self, theta, w_1, phi, w_2):
+    def accelerations(self, theta, w_1, phi, w_2):
         """Verlet is a second-order algorithm, which requires the second-order term in the Taylor expansion, namely the acceleration. 
         Therefore, we better work with equations 2.2.7 and 2.2.8 in my note than equation 2.2.12"""
         
@@ -83,7 +83,7 @@ class DoublePendulum:
         clone_Psi = self.psi
   
         #calculate y(k*dt)
-        self.psi = self.psi*2 - self.psi_minus1 + self.accelerations(theta, w_1, phi, w_2) * dt 
+        self.psi = self.psi*2 - self.psi_minus1 + self.accelerations(theta, w_1, phi, w_2) * dt * dt
         self.omega = (self.Psi - clone_Psi)/dt
 
         self.theta = self.psi[0]
