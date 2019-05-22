@@ -62,8 +62,8 @@ def main():
         current_max_x = abs(dp.theta) + 0.1 if abs(dp.theta) > current_max_x else current_max_x
         current_max_y = abs(dp.w_1) + 0.1 if abs(dp.w_1) > current_max_y else current_max_y
 
-        ax1.set_xlim(-current_max_x, current_max_x)
-        ax1.set_ylim(-current_max_y, current_max_y)
+        # ax1.set_xlim(-current_max_x, current_max_x)
+        # ax1.set_ylim(-current_max_y, current_max_y)
 
         x1 = L * math.sin(dp.theta)
         x2 = x1 + L * math.sin(dp.phi)
@@ -79,7 +79,7 @@ def main():
 
         return line, line1, time_text
     
-    ani = animation.FuncAnimation(fig, animate, interval= 40, blit=False, init_func=init)
+    ani = animation.FuncAnimation(fig, animate, interval= dt*1000, blit=True, init_func=init)
     plt.show()
 
 if __name__ == "__main__":
