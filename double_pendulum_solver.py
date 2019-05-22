@@ -84,11 +84,11 @@ class DoublePendulum:
   
         #calculate y(k*dt)
         self.psi = self.psi*2 - self.psi_minus1 + self.accelerations(theta, w_1, phi, w_2) * dt * dt
-        self.omega = (self.Psi - clone_Psi)/dt
+        self.omega = (self.psi - clone_Psi)/(2*dt)
 
         self.theta = self.psi[0]
         self.w_1 = self.omega[0]
-        self.phi = self.osi[1]
+        self.phi = self.psi[1]
         self.w_2 = self.omega[1]
         self.psi_minus1 = clone_Psi
         

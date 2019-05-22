@@ -1,11 +1,8 @@
-import getopt
-import os
-import sys
-import numpy as np
-import matplotlib.pyplot as plt 
-import matplotlib.animation as animation
-import double_pendulum_solver as dp
 import math
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+import double_pendulum_solver as dps
 
 def main():
     #default values
@@ -14,68 +11,75 @@ def main():
     M = 1.0
     dt = 0.025
 
-    #time stepping range 0 -> 20 seconds, by dt. retyrns list
-    time_steps = np.arange(0.0, 20, dt)
-
-    #default initial
-    theta = np.radians(120.0)
-    phi = np.radians(-10.0)
+    #initial conditions
+    theta = np.radians(10.0)
+    phi = np.radians(10.0)
     w_1 = np.radians(0.0)
     w_2 = np.radians(0.0)
 
-    inputs = np.array([G, M, theta, phi, L, w_1, w_2, dt])
-    double_pendulum_system = dp.DoublePendulum(*inputs)
+    inputs = np.array([G, M, theta, phi, L , w_1, w_2, dt])
+    dp = dps.DoublePendulum(*inputs)
 
     thetas = []
-    phis = []
-
     thetas.append(theta)
-    phis.append(phi)
+    w_1s = []
+    w_1s.append(w_1)
 
-    i = 1
-    #time stepping loop to create values
-    while (i < len(time_steps)):
-        double_pendulum_system.integrate_runge_kutta(dt)
-        thetas.append(double_pendulum_system.theta)
-        phis.append(double_pendulum_system.phi)
-        i += 1
-    
-    x_1 = []
-    y_1 = []
-    x_2 = [] 
-    y_2 = []
+    fig, (ax, ax1) = plt.subplots(1,2)
+    plt.subplots_adjust(wspace = 0.36)
+    ax.set(xlabel='x (m)', ylabel='y (m)')
+    ax1.set(xlabel='θ (rad)', ylabel='ξ (rad/s)')
 
-    #calculate coords
-    x_1 = [L * math.sin(theta) for theta in thetas]
-    y_1 = [-L * math.cos(theta) for theta in thetas]
-    x_2 = [L*math.sin(phis[i]) + x_1[i] for i in range(len(thetas))]
-    y_2 = [-L*math.cos(phis[i]) + y_1[i] for i in range(len(thetas))]
-
-    fig = plt.figure()
-    ax = fig.add_subplot(111, autoscale_on=False, xlim=(-2, 2), ylim=(-2,2))
-    ax.set_aspect('equal')
     ax.grid()
+    ax1.grid()
 
     line, = ax.plot([], [], 'o-', lw=2)
+    line1, = ax1.plot(thetas, w_1s, '-', lw=0.5)
+
     time_template = 'time = %.2fs'
     time_text = ax.text(0.05, 0.9, '', transform=ax.transAxes)
 
+    ax1.set_xlim(-abs(theta) - 0.1, abs(theta) + 0.1)
+    ax1.set_ylim(-abs(w_1) - 0.1, abs(w_1) + 0.1)
+
+    ax.set_xlim(-2*L - 0.1, 2*L + 0.1)
+    ax.set_ylim(-2*L - 0.1, 2*L + 0.1)
+
     def init():
-        line.set_data([], [])
+        line.set_data([],[])
+        line1.set_data(thetas, w_1s)
         time_text.set_text('')
-        return line, time_text
-
-    def animate(i):
-        thisx = [0, x_1[i], x_2[i]]
-        thisy = [0, y_1[i], y_2[i]]
-
-        line.set_data(thisx, thisy)
-        time_text.set_text(time_template % (i*dt))
-        return line, time_text   
-
-    interval = 1000 * dt
+        return line, line1, time_text
     
-    ani = animation.FuncAnimation(fig, animate, range(0, len(thetas)), interval= interval, blit=True, init_func=init)
+    def animate(i):
+        dp.integrate_runge_kutta(dt)
+
+        print (dp.theta)
+
+        current_max_x = ax1.get_xlim()[1]
+        current_max_y = ax1.get_ylim()[1]
+
+        current_max_x = abs(dp.theta) + 0.1 if abs(dp.theta) > current_max_x else current_max_x
+        current_max_y = abs(dp.w_1) + 0.1 if abs(dp.w_1) > current_max_y else current_max_y
+
+        ax1.set_xlim(-current_max_x, current_max_x)
+        ax1.set_ylim(-current_max_y, current_max_y)
+
+        x1 = L * math.sin(dp.theta)
+        x2 = x1 + L * math.sin(dp.phi)
+        y1 = -L * math.cos(dp.theta)
+        y2 = y1 - L * math.cos(dp.phi)
+
+        thetas.append(dp.theta)
+        w_1s.append(dp.w_1)
+
+        line1.set_data(thetas, w_1s)
+        line.set_data([0,x1,x2], [0,y1,y2])
+        time_text.set_text(time_template % (i*dt))
+
+        return line, line1, time_text
+    
+    ani = animation.FuncAnimation(fig, animate, interval= 40, blit=False, init_func=init)
     plt.show()
 
 if __name__ == "__main__":
