@@ -29,7 +29,7 @@ class DoublePendulum:
         
         #Initial value for Psi((n-1)*dt)
         theta_minus1 = self.theta - w_1*dt
-        phi_minus1 = self.theta - w_2*dt
+        phi_minus1 = self.phi - w_2*dt
         self.psi_minus1 = numpy.array([theta_minus1, phi_minus1])
 
     def compute_right_hand_size(self, theta, w_1, phi, w_2):
@@ -84,7 +84,7 @@ class DoublePendulum:
   
         #calculate y(k*dt)
         self.psi = self.psi*2 - self.psi_minus1 + self.accelerations(theta, w_1, phi, w_2) * dt * dt
-        self.omega = (self.psi - clone_Psi)/(2*dt)
+        self.omega = (self.psi - clone_Psi)/(dt)
 
         self.theta = self.psi[0]
         self.w_1 = self.omega[0]

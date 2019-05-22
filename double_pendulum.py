@@ -9,10 +9,10 @@ def main():
     G = 9.8
     L = 1.0
     M = 1.0
-    dt = 0.025
+    dt = 0.001
 
     #initial conditions
-    theta = np.radians(10.0)
+    theta = np.radians(120.0)
     phi = np.radians(10.0)
     w_1 = np.radians(0.0)
     w_2 = np.radians(0.0)
@@ -52,7 +52,7 @@ def main():
         return line, line1, time_text
     
     def animate(i):
-        dp.integrate_runge_kutta(dt)
+        dp.integrate_verlet(dt)
 
         current_max_x = ax1.get_xlim()[1]
         current_max_y = ax1.get_ylim()[1]
